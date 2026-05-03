@@ -3,89 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HbA1c to eAG Calculator - Khemika-OPD Takhli</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>HbA1C Converter - Khemika OPD Takhli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #8b5cf6; --secondary: #f59e0b; --bg: #faf5ff; }
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background: white; max-width: 420px; width: 100%; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid #f3e8ff; }
-        .header { background: linear-gradient(135deg, #8b5cf6 0%, #f59e0b 100%); color: white; padding: 30px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; }
-        .content { padding: 30px; }
+        :root { --primary: #1a3a5a; --accent: #9b59b6; --bg: #f4f7f6; }
+        body { font-family: 'Sarabun', sans-serif; background: var(--bg); padding: 15px; display: flex; justify-content: center; }
+        .card { max-width: 450px; width: 100%; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 2px solid var(--primary); }
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .header h2 { color: var(--primary); margin: 0; font-size: 1.4rem; }
+        .header p { font-size: 0.8rem; color: #666; font-weight: bold; margin: 5px 0 0; }
+        
         .input-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 10px; color: #5b21b6; }
-        input { width: 100%; padding: 15px; border: 2px solid #ddd6fe; border-radius: 12px; box-sizing: border-box; font-size: 22px; text-align: center; color: #4c1d95; }
-        input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
-        .calc-btn { width: 100%; padding: 18px; background: linear-gradient(to right, #8b5cf6, #f59e0b); color: white; border: none; border-radius: 15px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3); }
-        #result-box { margin-top: 25px; padding: 20px; border-radius: 15px; text-align: center; display: none; }
-        .eag-val { font-size: 36px; font-weight: bold; margin: 5px 0; }
-        .qr-section { text-align: center; padding: 15px; border-top: 1px dashed #ddd; }
-        .footer { background: #f8fafc; padding: 20px; text-align: center; font-size: 14px; color: #64748b; }
-        .dev-name { color: #8b5cf6; font-weight: bold; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+        input[type="number"] { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 1.1rem; box-sizing: border-box; text-align: center; }
+        
+        .result-box { background: #f8f9fa; padding: 20px; border-radius: 15px; text-align: center; margin-top: 20px; border: 1px solid #ddd; }
+        .res-value { font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 5px 0; }
+        .interpretation { font-weight: bold; padding: 10px; border-radius: 8px; margin-top: 10px; }
+        
+        .footer { text-align: center; font-size: 0.7rem; color: #888; margin-top: 25px; font-weight: bold; }
+        .btn-reset { width: 100%; padding: 12px; background: #6c757d; color: white; border: none; border-radius: 10px; cursor: pointer; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-<div class="container">
+
+<div class="card">
     <div class="header">
-        <h1>HbA1c to eAG</h1>
-        <p>แปลงค่าน้ำตาลสะสมเป็นค่าเฉลี่ย</p>
+        <h2>HbA1C & eAG Converter</h2>
+        <p>Khemika-OPD Takhli Digital Toolkit</p>
     </div>
-    <div class="content">
-        <div class="input-group">
-            <label>ระบุค่า HbA1c (%)</label>
-            <input type="number" id="hba1c" step="0.1" placeholder="เช่น 7.0">
-        </div>
-        <button class="calc-btn" onclick="calculateEAG()">คำนวณค่า eAG</button>
-        <div id="result-box">
-            <div style="font-size: 16px; color: #666;">น้ำตาลเฉลี่ยในเลือดสะสม (eAG)</div>
-            <div id="eag-display" class="eag-val"></div>
-            <div id="eag-status" style="font-weight: bold; font-size: 18px;"></div>
-        </div>
+
+    <div class="input-group">
+        <label>ป้อนค่าน้ำตาลเฉลี่ย (eAG) เพื่อหา HbA1C:</label>
+        <input type="number" id="eag_input" placeholder="หน่วย mg/dL" oninput="calcA1c()">
     </div>
-    <div class="qr-section">
-        <button onclick="toggleQR()" style="border:none; background:none; cursor:pointer; color:#94a3b8; font-size:12px;">[ แสดง/ซ่อน QR Code ]</button>
-        <div id="qr-cont" style="display:none; justify-content:center; margin-top:10px;"><div id="qrcode"></div></div>
+
+    <div class="input-group">
+        <label>หรือป้อน HbA1C (%) เพื่อหาค่าน้ำตาล:</label>
+        <input type="number" id="a1c_input" step="0.1" placeholder="หน่วย %" oninput="calcEag()">
     </div>
-    <div class="footer">พัฒนาโดย <span class="dev-name">Khemika-OPD Takhli</span></div>
+
+    <div class="result-box" id="resultArea">
+        <div id="label_res">กรุณากรอกตัวเลข</div>
+        <div class="res-value" id="val_res">--</div>
+        <div id="interpret" class="interpretation"></div>
+    </div>
+
+    <button class="btn-reset" onclick="resetForm()">ล้างข้อมูล</button>
+
+    <div class="footer">
+        อ้างอิงสูตร ADAG: eAG = 28.7 × HbA1c – 46.7<br>
+        © 2026 Innovation by Khemika
+    </div>
 </div>
 
 <script>
-    function calculateEAG() {
-        const hba1c = parseFloat(document.getElementById('hba1c').value);
-        if(!hba1c || hba1c <= 0) { alert("กรุณากรอกค่า HbA1c ให้ถูกต้องค่ะ"); return; }
+    function calcA1c() {
+        const eag = parseFloat(document.getElementById('eag_input').value);
+        const a1cInput = document.getElementById('a1c_input');
+        
+        if (eag > 0) {
+            const a1c = (eag + 46.7) / 28.7;
+            a1cInput.value = ""; // เคลียร์ช่องอีกฝั่ง
+            showResult(a1c.toFixed(1), "HbA1C (%)", a1c);
+        }
+    }
 
-        // Formula: eAG = (28.7 * HbA1c) - 46.7
-        const eag = (28.7 * hba1c) - 46.7;
-        const resVal = Math.round(eag);
+    function calcEag() {
+        const a1c = parseFloat(document.getElementById('a1c_input').value);
+        const eagInput = document.getElementById('eag_input');
+        
+        if (a1c > 0) {
+            const eag = (28.7 * a1c) - 46.7;
+            eagInput.value = ""; // เคลียร์ช่องอีกฝั่ง
+            showResult(Math.round(eag), "น้ำตาลเฉลี่ย (mg/dL)", a1c);
+        }
+    }
 
-        const resBox = document.getElementById('result-box');
-        let status = "", color = "", bg = "";
+    function showResult(val, label, a1cVal) {
+        document.getElementById('label_res').innerText = label;
+        document.getElementById('val_res').innerText = val;
+        
+        const interpret = document.getElementById('interpret');
+        let text = "";
+        let color = "";
+        let bgColor = "";
 
-        if (hba1c < 5.7) {
-            status = "ปกติ (Normal)";
-            color = "#155724"; bg = "#d4edda";
-        } else if (hba1c <= 6.4) {
-            status = "เสี่ยงเบาหวาน (Pre-diabetes)";
-            color = "#856404"; bg = "#fff3cd";
+        // เกณฑ์แปลผล HbA1C
+        if (a1cVal < 5.7) {
+            text = "ปกติ (Normal)";
+            color = "#155724"; bgColor = "#d4edda";
+        } else if (a1cVal >= 5.7 && a1cVal <= 6.4) {
+            text = "กลุ่มเสี่ยงเบาหวาน (Pre-diabetes)";
+            color = "#856404"; bgColor = "#fff3cd";
         } else {
-            status = "เป็นเบาหวาน (Diabetes)";
-            color = "#b91c1c"; bg = "#fee2e2";
+            text = "เกณฑ์วินิจฉัยเบาหวาน (Diabetes)";
+            color = "#721c24"; bgColor = "#f8d7da";
         }
 
-        resBox.style.display = "block";
-        resBox.style.backgroundColor = bg;
-        document.getElementById('eag-display').innerText = resVal + " mg/dL";
-        document.getElementById('eag-display').style.color = color;
-        document.getElementById('eag-status').innerText = status;
-        document.getElementById('eag-status').style.color = color;
+        interpret.innerText = text;
+        interpret.style.color = color;
+        interpret.style.backgroundColor = bgColor;
     }
 
-    new QRCode(document.getElementById("qrcode"), { text: window.location.href, width: 120, height: 120 });
-    function toggleQR() {
-        let x = document.getElementById("qr-cont");
-        x.style.display = (x.style.display === "none") ? "flex" : "none";
+    function resetForm() {
+        document.getElementById('eag_input').value = "";
+        document.getElementById('a1c_input').value = "";
+        document.getElementById('val_res').innerText = "--";
+        document.getElementById('label_res').innerText = "กรุณากรอกตัวเลข";
+        document.getElementById('interpret').innerText = "";
+        document.getElementById('interpret').style.backgroundColor = "transparent";
     }
 </script>
+
 </body>
 </html>
