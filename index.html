@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diabetes Tool - Khemika OPD Takhli</title>
+    <title>Diabetes Toolkit - Khemika OPD Takhli</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
@@ -13,27 +13,34 @@
         }
         body { font-family: 'Sarabun', sans-serif; background: var(--bg); padding: 10px; display: flex; justify-content: center; }
         .card { max-width: 500px; width: 100%; background: white; border-radius: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); overflow: hidden; }
-        .header { background: var(--primary-grad); color: white; padding: 25px 15px; text-align: center; }
-        .content { padding: 20px; }
-        .section-title { font-weight: bold; color: var(--primary-grad); border-left: 5px solid #ff4757; padding-left: 10px; margin: 15px 0; }
+        .header { background: var(--primary-grad); color: white; padding: 30px 15px; text-align: center; border-radius: 0 0 25px 25px; }
+        .content { padding: 25px; }
+        .section-title { font-weight: bold; color: #1a3a5a; border-left: 5px solid #ff4757; padding-left: 10px; margin: 20px 0 15px; font-size: 1.1rem; }
         
         .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
-        input[type="number"], select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; box-sizing: border-box; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.95rem; color: #444; }
+        input[type="number"], select { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 12px; font-size: 1.1rem; box-sizing: border-box; transition: 0.3s; background: #fafafa; }
+        input[type="number"]:focus { border-color: #0056b3; outline: none; background: white; box-shadow: 0 0 8px rgba(0,86,179,0.1); }
         
-        .result-area { background: #fdfdfd; padding: 15px; border-radius: 15px; border: 2px dashed #eee; text-align: center; margin-top: 10px; }
-        .res-val { font-size: 2.5rem; font-weight: 900; background: var(--secondary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 5px 0; }
-        .risk-badge { display: inline-block; padding: 8px 15px; border-radius: 10px; font-weight: bold; margin-top: 5px; }
+        .result-area { background: #ffffff; padding: 20px; border-radius: 18px; border: 2px dashed #ddd; text-align: center; margin-top: 10px; }
+        .res-val { font-size: 3rem; font-weight: 900; background: var(--secondary-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; }
+        .risk-badge { display: inline-block; padding: 10px 20px; border-radius: 12px; font-weight: bold; margin-top: 10px; font-size: 1rem; }
         
-        .footer { text-align: center; font-size: 0.75rem; color: #999; margin-top: 20px; font-weight: bold; padding-bottom: 10px; }
+        .btn-qr { width: 100%; padding: 15px; background: #e1e5f2; color: #1a3a5a; border: none; border-radius: 12px; cursor: pointer; margin-top: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.2s; }
+        .btn-qr:hover { background: #ced4da; }
+        #qrContainer { display: none; margin-top: 20px; padding: 20px; background: #fdfdfd; border-radius: 15px; text-align: center; }
+
+        .footer { text-align: center; font-size: 0.75rem; color: #999; margin-top: 30px; line-height: 1.6; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
+    <!-- ส่วนหัว (Header) -->
     <div class="header">
         <h2 style="margin:0;">Diabetes Digital Toolkit</h2>
-        <p style="margin:5px 0 0; font-size:0.8rem; opacity:0.9;">Khemika Pongsri | OPD Takhli</p>
+        <p style="margin:8px 0 0; opacity:0.9;">Khemika Pongsri | Nurse Innovation</p>
+        <p style="margin:2px 0 0; font-size: 0.75rem;">รพ.ตาคลี จ.นครสวรรค์</p>
     </div>
 
     <div class="content">
@@ -41,27 +48,27 @@
         <div class="section-title">🔄 HbA1C ↔ eAG Converter</div>
         <div class="input-group">
             <label>ป้อน HbA1C (%) เพื่อหาน้ำตาลเฉลี่ย:</label>
-            <input type="number" id="a1c_input" step="0.1" oninput="convert('a1c')">
+            <input type="number" id="a1c_input" step="0.1" placeholder="ตัวอย่าง 7.0" oninput="convert('a1c')">
         </div>
-        <div class="input-area" style="text-align: center; font-size: 0.8rem; color: #ccc;">- หรือ -</div>
+        <div style="text-align: center; font-size: 0.8rem; color: #bbb; margin: 5px 0;">— หรือ —</div>
         <div class="input-group">
             <label>ป้อนน้ำตาลเฉลี่ย (eAG) เพื่อหา HbA1C:</label>
-            <input type="number" id="eag_input" oninput="convert('eag')">
+            <input type="number" id="eag_input" placeholder="ตัวอย่าง 154" oninput="convert('eag')">
         </div>
         <div class="result-area">
-            <div id="conv_label" style="font-size:0.8rem; color:#666;">ผลการแปลงค่า</div>
+            <div id="conv_label" style="font-size:0.85rem; color:#666; font-weight: bold;">ผลการคำนวณ</div>
             <div id="conv_res" class="res-val">--</div>
         </div>
 
-        <hr style="margin: 25px 0; border: 0; border-top: 1px solid #eee;">
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
 
-        <!-- ส่วนที่ 2: ประเมินความเสี่ยงจากรูปภาพอ้างอิง -->
+        <!-- ส่วนที่ 2: ประเมินความเสี่ยง (Risk Assessment) จากรูป image_6d7e71.png -->
         <div class="section-title">📊 Glucose Risk Assessment</div>
         <div class="input-group">
-            <label>วิธีการตรวจ:</label>
+            <label>วิธีการตรวจเลือด:</label>
             <select id="method" onchange="assessRisk()">
-                <option value="fasting">ตรวจโดยอดอาหาร (Fasting)</option>
-                <option value="non-fasting">ตรวจโดยไม่อดอาหาร (Non-Fasting)</option>
+                <option value="fasting">อดอาหาร (Risk Base)</option>
+                <option value="non-fasting">ไม่อดอาหาร (DTX/Random)</option>
             </select>
         </div>
         <div class="input-group">
@@ -70,20 +77,29 @@
         </div>
 
         <div class="result-area" id="risk_box">
-            <div style="font-size:0.8rem; color:#666;">ระดับความเสี่ยง</div>
-            <div id="risk_text" style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;">กรุณากรอกข้อมูล</div>
-            <div id="risk_score" class="risk-badge"></div>
+            <div id="risk_label" style="font-size:0.85rem; color:#666; font-weight: bold;">ระดับความเสี่ยง</div>
+            <div id="risk_text" style="font-size: 1.3rem; font-weight: bold; margin-top: 10px; color: #ccc;">กรุณากรอกข้อมูล</div>
+            <div id="risk_score" class="risk-badge" style="display:none;"></div>
+        </div>
+
+        <!-- ส่วนแชร์ QR Code -->
+        <button class="btn-qr" onclick="toggleQR()">📲 แสดง QR Code เพื่อแชร์แอป</button>
+        <div id="qrContainer">
+            <div id="qrcode" style="display: flex; justify-content: center; margin-bottom: 10px;"></div>
+            <p style="font-size: 0.7rem; color: #666; margin: 0;">Scan เพื่อใช้งานในจุดคัดกรอง</p>
         </div>
 
         <div class="footer">
-            อ้างอิงเกณฑ์คัดกรองเบาหวาน รพ.ตาคลี<br>
+            อ้างอิงเกณฑ์ ADAG และ เกณฑ์คัดกรอง รพ.ตาคลี<br>
             Smart Nursing Innovation by Khemika
         </div>
     </div>
 </div>
 
+<!-- สคริปต์สำหรับการทำงาน -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-    // ส่วนคำนวณ HbA1C
+    // 1. ระบบแปลงค่า HbA1C ↔ eAG
     function convert(type) {
         const a1cIn = document.getElementById('a1c_input');
         const eagIn = document.getElementById('eag_input');
@@ -92,15 +108,15 @@
 
         if (type === 'a1c') {
             let val = parseFloat(a1cIn.value);
-            if (val > 0) {
+            if (!isNaN(val) && val > 0) {
                 let res = (28.7 * val) - 46.7;
                 resDisp.innerText = Math.round(res);
-                labelDisp.innerText = "ค่าน้ำตาลเฉลี่ย (eAG) mg/dL";
+                labelDisp.innerText = "น้ำตาลเฉลี่ย (eAG) mg/dL";
                 eagIn.value = "";
             }
         } else {
             let val = parseFloat(eagIn.value);
-            if (val > 0) {
+            if (!isNaN(val) && val > 0) {
                 let res = (val + 46.7) / 28.7;
                 resDisp.innerText = res.toFixed(1);
                 labelDisp.innerText = "ค่า HbA1C ประมาณการ (%)";
@@ -109,35 +125,58 @@
         }
     }
 
-    // ส่วนประเมินความเสี่ยงตามรูปภาพ
+    // 2. ระบบประเมินความเสี่ยงตามรูป image_6d7e71.png
     function assessRisk() {
         const method = document.getElementById('method').value;
         const glucose = parseFloat(document.getElementById('glucose_val').value);
         const riskText = document.getElementById('risk_text');
         const riskScore = document.getElementById('risk_score');
         
-        if (isNaN(glucose)) return;
+        if (isNaN(glucose)) {
+            riskText.innerText = "กรุณากรอกข้อมูล";
+            riskScore.style.display = "none";
+            return;
+        }
 
-        let result = { text: "", score: "", color: "", bg: "" };
+        let res = { text: "", score: "", color: "", bg: "" };
 
         if (glucose < 70) {
-            result = { text: "นอกเกณฑ์ (น้ำตาลต่ำ)", score: "Low", color: "#721c24", bg: "#f8d7da" };
+            res = { text: "นอกเกณฑ์ (น้ำตาลต่ำ)", score: "Low Glucose", color: "#b30000", bg: "#ffcccc" };
         } else {
             if (method === 'fasting') {
-                if (glucose < 100) result = { text: "ปกติ", score: "Risk = 0", color: "#155724", bg: "#d4edda" };
-                else if (glucose < 126) result = { text: "เสี่ยง", score: "Risk = 1", color: "#856404", bg: "#fff3cd" };
-                else result = { text: "สงสัยป่วย", score: "Risk = 2", color: "#721c24", bg: "#f8d7da" };
+                if (glucose < 100) res = { text: "ปกติ", score: "Risk = 0", color: "#155724", bg: "#d4edda" };
+                else if (glucose < 126) res = { text: "กลุ่มเสี่ยง", score: "Risk = 1", color: "#856404", bg: "#fff3cd" };
+                else res = { text: "สงสัยป่วย", score: "Risk = 2", color: "#b30000", bg: "#ffcccc" };
             } else {
-                if (glucose < 110) result = { text: "ปกติ", score: "Risk = 0", color: "#155724", bg: "#d4edda" };
-                else result = { text: "เสี่ยง", score: "Risk = 1", color: "#856404", bg: "#fff3cd" };
+                if (glucose < 110) res = { text: "ปกติ", score: "Risk = 0", color: "#155724", bg: "#d4edda" };
+                else res = { text: "กลุ่มเสี่ยง", score: "Risk = 1", color: "#856404", bg: "#fff3cd" };
             }
         }
 
-        riskText.innerText = result.text;
-        riskText.style.color = result.color;
-        riskScore.innerText = result.score;
-        riskScore.style.backgroundColor = result.bg;
-        riskScore.style.color = result.color;
+        riskText.innerText = res.text;
+        riskText.style.color = res.color;
+        riskScore.innerText = res.score;
+        riskScore.style.backgroundColor = res.bg;
+        riskScore.style.color = res.color;
+        riskScore.style.display = "inline-block";
+    }
+
+    // 3. ระบบ QR Code
+    function toggleQR() {
+        const container = document.getElementById("qrContainer");
+        if (container.style.display === "block") {
+            container.style.display = "none";
+        } else {
+            container.style.display = "block";
+            if (!document.getElementById("qrcode").innerHTML) {
+                new QRCode(document.getElementById("qrcode"), {
+                    text: window.location.href,
+                    width: 150,
+                    height: 150
+                });
+            }
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
     }
 </script>
 
